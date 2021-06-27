@@ -1,6 +1,6 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:nyt/Model/results_model.dart';
-import 'package:nyt/Screen/Home/bloc/states.dart';
+import 'package:nyt/Screens/Home/bloc/states.dart';
 import 'package:nyt/core/dio_util.dart';
 import 'package:nyt/repository/home_repository.dart';
 

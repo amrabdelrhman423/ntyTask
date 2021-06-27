@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:nyt/Screen/Details/details_page.dart';
-import 'package:nyt/Screen/Home/bloc/cubit.dart';
-import 'package:nyt/Screen/Home/bloc/states.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:nyt/Screens/Details/details_page.dart';
 import 'package:nyt/widgets/articalItem.dart';
+
 import 'package:nyt/widgets/bottom_looader.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
-import 'package:toast/toast.dart';
+
+import 'bloc/cubit.dart';
+import 'bloc/states.dart';
 
 // ignore: must_be_immutable
 class HomePage extends StatefulWidget {
@@ -31,10 +33,14 @@ class _HomePageState extends State<HomePage> {
         create: (BuildContext context) => HomeCubit()..getstories(),
         child: BlocConsumer<HomeCubit, HomeState>(listener: (context, state) {
           if (state is HomeGetListerrorState) {
-            Toast.show(state.error, context,
-                duration: Toast.LENGTH_LONG,
-                gravity: Toast.CENTER,
-                backgroundColor: Colors.red);
+            Fluttertoast.showToast(
+                msg: state.error,
+                toastLength: Toast.LENGTH_SHORT,
+                gravity: ToastGravity.CENTER,
+                timeInSecForIosWeb: 1,
+                backgroundColor: Colors.red,
+                textColor: Colors.white,
+                fontSize: 16.0);
           }
         }, builder: (context, state) {
           HomeCubit homeCubit = HomeCubit.get(context);

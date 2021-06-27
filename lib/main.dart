@@ -3,7 +3,6 @@ import 'package:nyt/core/dio_util.dart';
 
 import 'Screens/Home/home_page.dart';
 
-
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
   DioUtil.getInstance();
