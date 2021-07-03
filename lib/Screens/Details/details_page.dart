@@ -13,8 +13,15 @@ class ArticleDetails extends StatelessWidget {
           Container(
               foregroundDecoration: BoxDecoration(color: Colors.black26),
               height: 400,
-              child: Image.network(article.multimedia![0].url!,
-                  fit: BoxFit.cover)),
+              decoration: BoxDecoration(
+                image: DecorationImage(image: NetworkImage(
+                    article.multimedia![0].url!
+                ),
+                  fit: BoxFit.fill
+
+                ),
+              ),
+             ),
           SingleChildScrollView(
             padding: const EdgeInsets.only(top: 16.0, bottom: 20.0),
             child: Column(

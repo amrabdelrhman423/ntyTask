@@ -34,7 +34,7 @@ class ArticleItem extends StatelessWidget {
                           image: NetworkImage(
                             results.multimedia![itemIndex].url!,
                           ),
-                          fit: BoxFit.cover,
+                          fit: BoxFit.fill,
                         )),
                     width: double.infinity,
                   ),

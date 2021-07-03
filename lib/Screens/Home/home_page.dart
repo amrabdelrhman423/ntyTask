@@ -45,101 +45,137 @@ class _HomePageState extends State<HomePage> {
         }, builder: (context, state) {
           HomeCubit homeCubit = HomeCubit.get(context);
           return Scaffold(
-            body: SmartRefresher(
-              controller: _refreshController!,
-              enablePullUp: true,
-              header: MaterialClassicHeader(
-                color: Colors.lightBlue,
-              ),
-              footer: CustomFooter(
-                builder: (BuildContext context, LoadStatus? mode) {
-                  Widget body;
-                  if (mode == LoadStatus.idle) {
-                    body = Text("pull up load");
-                  } else if (mode == LoadStatus.loading) {
-                    body = BottomLoader();
-                  } else if (mode == LoadStatus.failed) {
-                    body = Text("Load Failed!Click retry!");
-                  } else if (mode == LoadStatus.canLoading) {
-                    body = Text("release to load more");
-                  } else {
-                    body = Text("No more Data");
-                  }
-                  return Container(
-                    height: 55.0,
-                    child: Center(child: body),
-                  );
+            body: LayoutBuilder(
+              builder: (BuildContext context, BoxConstraints constraints) =>
+                  SmartRefresher(
+                controller: _refreshController!,
+                enablePullUp: true,
+                header: MaterialClassicHeader(
+                  color: Colors.lightBlue,
+                ),
+                footer: CustomFooter(
+                  builder: (BuildContext context, LoadStatus? mode) {
+                    Widget body;
+                    if (mode == LoadStatus.idle) {
+                      body = Text("pull up load");
+                    } else if (mode == LoadStatus.loading) {
+                      body = BottomLoader();
+                    } else if (mode == LoadStatus.failed) {
+                      body = Text("Load Failed!Click retry!");
+                    } else if (mode == LoadStatus.canLoading) {
+                      body = Text("release to load more");
+                    } else {
+                      body = Text("No more Data");
+                    }
+                    return Container(
+                      height: 55.0,
+                      child: Center(child: body),
+                    );
+                  },
+                ),
+                onRefresh: () {
+                  homeCubit.getstories();
+                  _refreshController!.refreshCompleted();
                 },
-              ),
-              onRefresh: () {
-                homeCubit.getstories();
-                _refreshController!.refreshCompleted();
-              },
-              child: CustomScrollView(
-                slivers: [
-                  SliverAppBar(
-                    brightness: Brightness.light,
-                    backgroundColor: Colors.white,
-                    title: Text(
-                      "NYT BEST STORIES",
-                      style: TextStyle(color: Colors.black),
+                child: CustomScrollView(
+                  slivers: [
+                    SliverAppBar(
+                      brightness: Brightness.light,
+                      backgroundColor: Colors.white,
+                      title: Text(
+                        "NYT BEST STORIES",
+                        style: TextStyle(color: Colors.black),
+                      ),
+                      centerTitle: true,
+                      floating: true,
+                      elevation: 3,
                     ),
-                    centerTitle: true,
-                    floating: true,
-                    elevation: 3,
-                  ),
-                  SliverPadding(
-                    padding: const EdgeInsets.fromLTRB(0.0, 10.0, 0.0, 5.0),
-                    sliver: SliverToBoxAdapter(
-                      child: Container(
-                        width: double.infinity,
-                        height: 10,
-                        child: Container(),
+                    SliverPadding(
+                      padding: const EdgeInsets.fromLTRB(0.0, 10.0, 0.0, 5.0),
+                      sliver: SliverToBoxAdapter(
+                        child: Container(
+                          width: double.infinity,
+                          height: 10,
+                          child: Container(),
+                        ),
                       ),
                     ),
-                  ),
-                  state is Homeloadingstate
-                      ? SliverFillRemaining(
-                          child: Container(
-                              child: Center(
-                            child: CircularProgressIndicator(),
-                          )),
-                        )
-                      : state is HomeGetListerrorState
-                          ? SliverFillRemaining(
-                              child: Container(
-                                  child: Center(
-                                child: Text(
-                                  state.error,
-                                  style: TextStyle(
-                                      color: Colors.red,
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 18),
-                                ),
-                              )),
-                            )
-                          : SliverList(
-                              delegate: SliverChildBuilderDelegate(
-                                (context, index) {
-                                  return InkWell(
-                                    onTap: () {
-                                      Navigator.of(context).push(
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  ArticleDetails(
-                                                    article: homeCubit
-                                                        .listAcrticls![index],
-                                                  )));
-                                    },
-                                    child: ArticleItem(
-                                        results:
-                                            homeCubit.listAcrticls![index]),
-                                  );
-                                },
-                                childCount: homeCubit.listAcrticls!.length,
-                              ),
-                            ),
-                ],
+                    state is Homeloadingstate
+                        ? SliverFillRemaining(
+                            child: Container(
+                                child: Center(
+                              child: CircularProgressIndicator(),
+                            )),
+                          )
+                        : state is HomeGetListerrorState
+                            ? SliverFillRemaining(
+                                child: Container(
+                                    child: Center(
+                                  child: Text(
+                                    state.error,
+                                    style: TextStyle(
+                                        color: Colors.red,
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 18),
+                                  ),
+                                )),
+                              )
+                            : constraints.maxWidth > 600
+                                ? SliverGrid(
+                                    gridDelegate:
+                                        const SliverGridDelegateWithMaxCrossAxisExtent(
+                                      maxCrossAxisExtent: 500.0,
+                                      mainAxisSpacing: 10.0,
+                                      crossAxisSpacing: 4.0,
+                                      childAspectRatio: 1.0,
+                                    ),
+                                    delegate: SliverChildBuilderDelegate(
+                                      (BuildContext context, int index) {
+                                        return  InkWell(
+                                          onTap: () {
+                                            Navigator.of(context).push(
+                                                MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        ArticleDetails(
+                                                          article: homeCubit
+                                                              .listAcrticls![
+                                                          index],
+                                                        )));
+                                          },
+                                          child: ArticleItem(
+                                              results: homeCubit
+                                                  .listAcrticls![index]),
+                                        );
+                                      },
+                                      childCount:
+                                          homeCubit.listAcrticls!.length,
+                                    ),
+                                  )
+                                : SliverList(
+                                    delegate: SliverChildBuilderDelegate(
+                                      (context, index) {
+                                        return InkWell(
+                                          onTap: () {
+                                            Navigator.of(context).push(
+                                                MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        ArticleDetails(
+                                                          article: homeCubit
+                                                                  .listAcrticls![
+                                                              index],
+                                                        )));
+                                          },
+                                          child: ArticleItem(
+                                              results: homeCubit
+                                                  .listAcrticls![index]),
+                                        );
+                                      },
+                                      childCount:
+                                          homeCubit.listAcrticls!.length,
+                                    ),
+                                  ),
+                  ],
+                ),
               ),
             ),
           );

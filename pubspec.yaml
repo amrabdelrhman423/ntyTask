@@ -34,7 +34,8 @@ dependencies:
   flutter_bloc: ^7.0.1
   fluttertoast: ^8.0.7
   pull_to_refresh: ^2.0.0
-  #device_preview: ^0.7.3
+  layout: ^0.6.2
+  device_preview: ^0.7.3
 
 dev_dependencies:
   flutter_test:
